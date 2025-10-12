@@ -1,10 +1,17 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { courses } from "../data";
 
-export async function GET(req: Request, { params }: { params: { slug: string } }) {
-  const course = courses.find(c => c.slug === params.slug);
+export async function GET(
+  request: NextRequest,
+  context: { params: { slug: string } }
+) {
+  const { slug } = context.params;
 
-  if (!course) return NextResponse.json({ message: "Course not found" }, { status: 404 });
+  const course = courses.find((c) => c.slug === slug);
 
-  return NextResponse.json(course);
+  if (!course) {
+    return NextResponse.json({ message: "Course not found" }, { status: 404 });
+  }
+
+  return NextResponse.json(course, { status: 200 });
 }
